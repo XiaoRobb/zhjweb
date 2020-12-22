@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="whu.zhj.zhjweb.mapper.UserMapper">
+    <select id="selectOne" parameterType="java.lang.Integer" resultType="whu.zhj.zhjweb.entity.User">
+        SELECT
+        *
+        FROM user
+        WHERE userId = #{id, jdbcType = INTEGER}
+    </select>
+
+    <select id="select" parameterType="java.util.Map" resultType="whu.zhj.zhjweb.entity.User">
+        SELECT
+        *
+        FROM user
+        <where>
+            <if test="map.containsKey('userId')">
+                <choose>
+                    <when test="map.get('userId') instanceof java.util.List">
+                        userId IN
+                        <foreach collection="map.get('userId')" item="item" separator="," open="(" close=")">
+                            #{item}
+                        </foreach>
+                    </when>
+                    <otherwise>
+                        userId = #{map[userId]}
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        <if test="map.containsKey('start') and map.containsKey('length')">
+            limit #{map[start]}, #{map[length]}
+        </if>
+    </select>
+
+    <insert id="insert"
+            useGeneratedKeys="true"
+            keyProperty="userId"
+            parameterType="whu.zhj.zhjweb.entity.User">
+        INSERT INTO user (userId, userName, password, salt, nickname)
+        VALUES (#{userId, jdbcType = INTEGER}, #{userName, jdbcType = VARCHAR}, #{password, jdbcType = VARCHAR},
+                #{salt, jdbcType = VARCHAR}, #{nickName, jdbcType = VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="whu.zhj.zhjweb.entity.User">
+        UPDATE user
+        <set>
+            <if test="userId != null">
+                unitId = #{unitId, jdbcType = INTEGER},
+            </if>
+            <if test="userName != null">
+                userName = #{userName, jdbcType = VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password, jdbcType = VARCHAR},
+            </if>
+            <if test="salt != null">
+                salt = #{salt, jdbcType = VARCHAR},
+            </if>
+            <if test="nickName != null">
+                nickName = #{nickName, jdbcType = VARCHAR},
+            </if>
+        </set>
+        WHERE userId = #{userId, jdbcType = INTEGER}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        DELETE FROM user
+        WHERE userId = #{id, jdbcType=INTEGER}
+    </delete>
+</mapper>
