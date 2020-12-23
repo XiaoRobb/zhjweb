@@ -2,9 +2,11 @@ package whu.zhj.zhjweb.service;
 
 import org.springframework.stereotype.Service;
 import whu.zhj.zhjweb.entity.User;
+import whu.zhj.zhjweb.entity.UserEx;
 import whu.zhj.zhjweb.mapper.UserMapper;
 
 import javax.annotation.Resource;
+import javax.jws.soap.SOAPBinding;
 import java.util.List;
 
 /**
@@ -12,18 +14,14 @@ import java.util.List;
  * UserService
  */
 @Service
-public class UserService {
+public class UserService extends BaseService<User> {
     @Resource
     private UserMapper userMapper;
 
-    /**
-     * 根据用户Id获取用户
-     * @param userId 用户Id
-     * @return 用户对象
-     */
-    public User getUserById(Integer userId){
-        try {
-            return userMapper.selectOne(userId);
+    public UserEx getUserExByUserName(String userName){
+        try{
+            UserEx userEx = userMapper.selectUserExByUserName(userName);
+            return userEx;
         }catch (Exception e){
             e.printStackTrace();
             return null;

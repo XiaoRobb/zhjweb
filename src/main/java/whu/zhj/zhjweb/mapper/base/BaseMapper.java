@@ -1,5 +1,6 @@
 package whu.zhj.zhjweb.mapper.base;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -9,8 +10,14 @@ import java.util.Map;
  * @author zhj
  * Mapper接口
  */
-
+@Mapper
 public interface BaseMapper<T> {
+
+    /**
+     * 总记录条数
+     * @return 总记录条数
+     */
+    int totalRecordCount();
 
     /**
      * 根据id选择一条记录

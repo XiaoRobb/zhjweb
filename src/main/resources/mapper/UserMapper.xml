@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="whu.zhj.zhjweb.mapper.UserMapper">
+
+    <sql id="UserEx_Column_View">
+        userId, userName, password, salt, nickName, rightIds, rightNames
+    </sql>
+
+
+    <select id="totalRecordCount" resultType="java.lang.Integer">
+        select count(*) from user
+    </select>
+
     <select id="selectOne" parameterType="java.lang.Integer" resultType="whu.zhj.zhjweb.entity.User">
         SELECT
         *
@@ -30,6 +40,19 @@
         <if test="map.containsKey('start') and map.containsKey('length')">
             limit #{map[start]}, #{map[length]}
         </if>
+    </select>
+
+    <select id="selectUserByUserName" resultType="whu.zhj.zhjweb.entity.User">
+        SELECT *
+        FROM user
+        WHERE userName = #{userName}
+    </select>
+
+    <select id="selectUserExByUserName" resultType="whu.zhj.zhjweb.entity.UserEx">
+        SELECT
+        <include refid="UserEx_Column_View"/>
+        FROM view_user_userRight
+        WHERE userName = #{userName}
     </select>
 
     <insert id="insert"

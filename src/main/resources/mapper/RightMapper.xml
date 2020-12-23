@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="whu.zhj.zhjweb.mapper.RightMapper">
+
+    <select id="totalRecordCount" resultType="java.lang.Integer">
+        select count(*) from right
+    </select>
+
+    <select id="selectOne" parameterType="java.lang.Integer" resultType="whu.zhj.zhjweb.entity.Right">
+        SELECT
+            *
+        FROM right
+        WHERE rightId = #{id, jdbcType = INTEGER}
+    </select>
+
+    <select id="select" parameterType="java.util.Map" resultType="whu.zhj.zhjweb.entity.Right">
+        SELECT
+        *
+        FROM right
+        <where>
+            <if test="map.containsKey('rightId')">
+                <choose>
+                    <when test="map.get('rightId') instanceof java.util.List">
+                        userId IN
+                        <foreach collection="map.get('rightId')" item="item" separator="," open="(" close=")">
+                            #{item}
+                        </foreach>
+                    </when>
+                    <otherwise>
+                        rightId = #{map[rightId]}
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        <if test="map.containsKey('start') and map.containsKey('length')">
+            limit #{map[start]}, #{map[length]}
+        </if>
+    </select>
+
+    <insert id="insert"
+            useGeneratedKeys="true"
+            keyProperty="rightId"
+            parameterType="whu.zhj.zhjweb.entity.Right">
+        INSERT INTO right (rightId, rightName, rightType, url, viewPath, enable, creatTime, createMan, permission)
+        VALUES (#{rightId, jdbcType = INTEGER}, #{rightId, jdbcType = VARCHAR}, #{rightType, jdbcType = INTEGER},
+                #{url, jdbcType = VARCHAR}, #{viewPath, jdbcType = VARCHAR}, #{enable, jdbcType = BIT},
+                #{createTime, jdbcType = TIMESTAMP}, #{createMan, jdbcType = VARCHAR}, #{permission, jdbcType = VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="whu.zhj.zhjweb.entity.Right">
+        UPDATE right
+        <set>
+            <if test="rightId != null">
+                unitId = #{rightId, jdbcType = INTEGER},
+            </if>
+            <if test="rightName != null">
+                rightName = #{rightId, jdbcType = VARCHAR},
+            </if>
+            <if test="rightType != null">
+                rightType = #{rightType, jdbcType = INTEGER},
+            </if>
+            <if test="url != null">
+                url = #{url, jdbcType = VARCHAR},
+            </if>
+            <if test="viewPath != null">
+                viewPath = #{viewPath, jdbcType = VARCHAR},
+            </if>
+            <if test="enable != null">
+                enable = #{enable, jdbcType = BIT},
+            </if>
+            <if test="creatTime != null">
+                creatTime = #{createTime, jdbcType = TIMESTAMP},
+            </if>
+            <if test="createMan != null">
+                createMan = #{createMan, jdbcType = VARCHAR},
+            </if>
+            <if test="permission != null">
+                permission = #{permission, jdbcType = VARCHAR},
+            </if>
+        </set>
+        WHERE rightId = #{rightId, jdbcType = INTEGER}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        DELETE FROM right
+        WHERE rightId = #{id, jdbcType = INTEGER}
+    </delete>
+</mapper>

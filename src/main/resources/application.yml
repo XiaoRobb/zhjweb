@@ -1,19 +1,58 @@
 spring:
   profiles:
-    #ָ����Ч������
+    # 指定生效的配置
     active: windowsdev
   servlet:
     multipart:
-      #�����ļ���С
+      # 设置文件大小
       max-file-size: 10MB
       enabled: true
       max-request-size: 10MB
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/zhjweb?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 123456
+    # 连接池配置
+    druid:
+      # 初始化大小，最小，最大
+      initial-size: 20
+      min-idle: 10
+      max-active: 100
+      # 配置获取连接等待超时的时间
+      max-wait: 120000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位毫秒
+      time-between-eviction-runs-millis: 120000
+      # 配置一个连接在池中最小生存时间
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM sys_user
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      # 打开 PSCache，并且指定每个连接上 PSCache 的大小
+      pool-prepared-statements: false
+      max-pool-prepared-statement-per-connection-size: 20
+      # 连接泄漏处理。Druid提供了RemoveAbandoned相关配置，用来关闭长时间不使用的连接（例如忘记关闭连接）。
+      # 配置监控统计拦截的 Filter，去掉后监控界面 SQL 无法统计，wall 用于防火墙
+      filters: stat,wall,log4j2
+      # 通过 connection-properties 属性打开 mergeSql 功能；慢 SQL 记录
+      remove-abandoned: true
+      # 1800秒，也就是30分钟
+      remove-abandoned-timeout: 1800
+      connection-properties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
+      # 配置 DruidStatFilter
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: .js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*
 
-#mybatis���������
+
 mybatis:
   type-aliases-package: whu.zhj.zhjweb.entity
   mapper-locations: classpath:mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
+
 
 
