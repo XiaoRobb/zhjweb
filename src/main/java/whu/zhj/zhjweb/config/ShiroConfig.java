@@ -53,6 +53,7 @@ public class ShiroConfig {
         //添加内置过滤器
         //拦截
         Map<String,String> filterChinaDefinitionMap = new LinkedHashMap<>();
+        filterChinaDefinitionMap.put("/api/users/zhj", "authc");
         //add请求必须认证才能访问
         filterChinaDefinitionMap.put("/add","authc");
         filterChinaDefinitionMap.put("/del","authc");
